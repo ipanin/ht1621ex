@@ -197,6 +197,10 @@ public:
      * \sa readBits()
      */
     void writeBits(uint8_t data, uint8_t cnt);
+
+
+    void writeBitsReverse(uint32_t data, uint8_t cnt);
+
     /**
      * \fn uint8_t readBits(uint8_t cnt)
      * \brief Reads bits from the HT1621.
@@ -205,45 +209,39 @@ public:
      * \warning There is no check if too much bits are read. 0nly the last batch of 8 will be sent back.
      * \sa writeBits()
      */
+#ifdef __HT1621_READ
     uint8_t readBits(uint8_t cnt);
+#endif
     /**
      * \fn void sendCommand(uint8_t cmd, bool first = true, bool last = true)
      * \brief Sends a command to the HT1621.
      * @param cmd Id of the command to send.
      * @param first If true CS is taken.
-     * @param last  If true CS is relased.
+     * @param last  If true CS is released.
      * \warning There is no check on the command id.
      */
     void sendCommand(uint8_t cmd, bool first = true, bool last = true);
+
     /** 
-     * \fn void write(uint8_t address, uint8_t data)
-     * \brief Write \c data at the given address.
-     * @param address Address to which write the data. Max address is 128.
-     * @param data Data to be written. Remark that only the 4 less significative bits are used.
+     * \brief Write \c bits at the given address.
+     * @param address Address to which write the bits. Max address is 32.
+     * @param bits Contains bits to be written. 
+     * @param bit_cnt Count of bits to send starting from less significant.
      * \warning There is no check to verify if the address is valid.
      */
-    void write(uint8_t address, uint8_t data);
-    /** 
-     * \fn void write(uint8_t address, uint8_t data, uint8_t cnt)
-     * \brief Write \c data at the given address and at the \c cnt successive addresses.
-     * @param address Address to which write the data. Max address is 128.
-     * @param data Data to be written. Remark that only the 4 less significative bits are used.
-     * @param cnt Number of times that \c data has to be written
-     * \warning There is no check to verify if the address is valid. Moreover, pay attention that 
-     * the address \c (address+cnt) has also to be valid.
-     */
-    void write(uint8_t address, uint8_t data, uint8_t cnt);
+    void write(uint8_t address, uint32_t bits, uint8_t bit_cnt = 4);
+
     /**
-     * \fn void write(uint8_t address, uint8_t *data, uint8_t cnt)
      * \brief Write \c cnt bytes starting at \c address and take data from buffer \c data.
-     * @param address Address to which start writing data. Max address is 128.
-     * @param data Buffer to be written.
-     * @param cnt Length of the buffer.
-     * \warning The buffer is byte aligned, so it is not very efficient. Indeed, only the 4 less significant
+     * @param address Address to which start writing data. Max address is 32.
+     * @param array Array to be written.
+     * @param cnt Length of the array.
+     * \warning The array is byte aligned, so it is not very efficient. Indeed, only the 4 less significant
      * bits are written.
-     * \warning There is no check that the buffer is of suitable length.
+     * \warning There is no check that the array is of suitable length.
      */
-    void write(uint8_t address, uint8_t *data, uint8_t cnt);
+    void writeArray(uint8_t address, uint8_t* array, uint8_t cnt);
+
     /** 
      * \fn read(uint8_t address)
      * \brief Read memory content at address \c address
@@ -256,12 +254,12 @@ public:
      * \fn void read(uint8_t address, uint8_t *data, uint8_t cnt)
      * \brief Read \c cnt bytes starting from \c address into buffer \c data.
      * @param address Memory address to read from.
-     * @param *data Buffer in which to store data read.
+     * @param data Buffer in which to store data read.
      * @param cnt Number of bytes to read.
      * \warning There is no check to verify if the address is valid.
      * \warning There is no check that the buffer is of suitable length.
      */
-    void read(uint8_t address, uint8_t *data, uint8_t cnt);
+    void read(uint8_t address, uint8_t* data, uint8_t cnt);
 };
 
 #endif
