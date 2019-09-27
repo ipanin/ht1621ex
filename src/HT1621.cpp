@@ -124,9 +124,9 @@ void HT1621::writeArray(uint8_t address, uint8_t* array, uint8_t cnt)
     writeBits(WRITE_MODE, 3);
     writeBits(address<<2, 6);
     for (i = 0; i < cnt; i++) {
-        writeBitsReverse(data[i], 4);
+        writeBitsReverse(array[i], 4);
 #ifndef __HT1621_READ
-        ram[i] = data[i];
+        ram[i] = array[i];
 #endif
     }
     
