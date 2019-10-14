@@ -67,23 +67,18 @@
 
 #include <inttypes.h>
 #include <string.h>
-#include "Print.h"
-#include <HT1621.h>
+#include <Print.h>
+#include "ILcdDisplay.h"
 
-#define HT1621_MAX_ADDR 32
 #define TEXT_DIR_LEFT2RIGHT 1
 #define TEXT_DIR_RIGHT2LEFT 0
 
 class LiquidCrystal7S : public Print {
 public:
     /**
-     * \brief Constructor. 3-Wire protocol will be used for the communication.
+     * \brief Constructor. 
      */
-    LiquidCrystal7S(uint8_t ss, uint8_t rw, uint8_t data);
-    /**
-     * \brief Constructor. 4-Wire protocol will be used for the communication.
-     */
-    LiquidCrystal7S(uint8_t ss, uint8_t r, uint8_t w, uint8_t data);
+    LiquidCrystal7S(ILcdDisplay* pDisplay);
     
     inline ~LiquidCrystal7S() { delete ht; }
     
@@ -106,11 +101,11 @@ public:
     /**
      * \brief Turn off the display.
      */
-    inline void noDisplay() { ht->sendCommand(HT1621::LCD_OFF); };
+    inline void noDisplay() { ht->noDisplay(); };
     /**
      * \brief Turn on the display.
      */
-    inline void display()  { ht->sendCommand(HT1621::LCD_ON); };
+    inline void display() { ht->display(); };
     /**
      * \brief Scroll all digits 1 position to the left. Lines wrap.
      */
@@ -159,9 +154,9 @@ public:
      */
     virtual size_t write(const uint8_t str[]);
     
-    using Print::write;
+    //using Print::write;
 protected:
-    HT1621  *ht;    
+    ILcdDisplay* ht;    
     /**
      * @{
      * @name Cursor position
@@ -171,10 +166,6 @@ protected:
     /** @} */
 private:
     /**
-     * \brief Initialize the LCD with 256KHz internal RC oscillator, 1/3 Bias and 4 COM.
-     */
-    void initLCD();
-    /**
      * \brief Direction of text writing.
      */
     uint8_t _text_dir;
@@ -182,21 +173,7 @@ private:
      * \brief Keep track is autoscroll function is active or not.
      */
     bool _autoscroll;
-    /**
-     * @{
-     * @name Pins
-     * \brief Pins for the serial communication with the HT1621
-     */
-    /** \brief Read pin. */
-    uint8_t _r_pin;
-    /** \brief Write pin. */
-    uint8_t _w_pin;
-    /** \brief Slave select pin */
-    uint8_t _ss_pin;
-    /** \brief Data pin */
-    uint8_t _data_pin;
-    /** @} */
-    
+     
     /**
      * @{
      * @name Display dimensions
