@@ -17,26 +17,28 @@
 #include <inttypes.h>
 #include "Arduino.h"
 
+LiquidCrystal7S::LiquidCrystal7S(uint8_t ss, uint8_t rw, uint8_t data) 
+    : _ss_pin(ss), _r_pin(rw), _w_pin(rw), _data_pin(data) {
+    ht = new HT1621(_ss_pin, _r_pin, _data_pin);
+    
+    initLCD();
+}
+
+LiquidCrystal7S::LiquidCrystal7S(uint8_t ss, uint8_t r, uint8_t w, uint8_t data) 
+    : _ss_pin(ss), _r_pin(r), _w_pin(w), _data_pin(data) {
+    ht = new HT1621(_ss_pin, _r_pin, _data_pin);
+
+    initLCD();
+}
+
 void LiquidCrystal7S::initLCD()
 {
     ht->begin();
-    
+
     ht->sendCommand(HT1621::RC256K);
-    ht->sendCommand(HT1621::BIAS_THIRD_4_COM);
+    ht->sendCommand(HT1621::BIAS_THIRD_3_COM);
     ht->sendCommand(HT1621::SYS_EN);
     ht->sendCommand(HT1621::LCD_ON);
-}
-
-LiquidCrystal7S::LiquidCrystal7S(uint8_t ss, uint8_t rw, uint8_t data) : _ss_pin(ss), _r_pin(rw), _w_pin(rw), _data_pin(data) {
-    ht = new HT1621(_ss_pin, _r_pin, _data_pin);
-    
-    initLCD();
-}
-
-LiquidCrystal7S::LiquidCrystal7S(uint8_t ss, uint8_t r, uint8_t w, uint8_t data) : _ss_pin(ss), _r_pin(r), _w_pin(w), _data_pin(data) {
-    ht = new HT1621(_ss_pin, _r_pin, _data_pin);
-
-    initLCD();
 }
 
 void LiquidCrystal7S::begin(uint8_t cols, uint8_t lines) {

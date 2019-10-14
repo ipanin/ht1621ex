@@ -77,100 +77,83 @@
 class LiquidCrystal7S : public Print {
 public:
     /**
-     * \fn LiquidCrystal7S(uint8_t ss, uint8_t rw, uint8_t data)
      * \brief Constructor. 3-Wire protocol will be used for the communication.
      */
     LiquidCrystal7S(uint8_t ss, uint8_t rw, uint8_t data);
     /**
-     * \fn LiquidCrystal7S(uint8_t ss, uint8_t r, uint8_t w, uint8_t data)
      * \brief Constructor. 4-Wire protocol will be used for the communication.
      */
     LiquidCrystal7S(uint8_t ss, uint8_t r, uint8_t w, uint8_t data);
-    /**
-     * \fn ~LiquidCrystal7S()
-     * \brief Destructor.
-     */
     
     inline ~LiquidCrystal7S() { delete ht; }
     
     /**
-     * \fn void begin(uint8_t cols, uint8_t rows)
      * \brief Init display and configure memory for \c rows and \c cols.
      * @param cols Number of display columns
      * @param rows Number of display rows
      */
     void begin(uint8_t cols, uint8_t rows);
     /**
-     * \fn void clear()
      * \brief Clear the display
      * \warning Only row and columns are cleared. If the display has 'special' addresses for displaying special symbols
      * then these are not cleared.
      */
     void clear();
     /**
-     * \fn void home()
      * \brief Reset cursor position ie. position it at (0,0).
      */
     inline void home() { _curs_col = 0; _curs_row = 0; };
     /**
-     * \fn void noDisplay()
      * \brief Turn off the display.
      */
     inline void noDisplay() { ht->sendCommand(HT1621::LCD_OFF); };
     /**
-     * \fn void display()
      * \brief Turn on the display.
      */
     inline void display()  { ht->sendCommand(HT1621::LCD_ON); };
     /**
-     * \fn void scrollDisplayLeft()
      * \brief Scroll all digits 1 position to the left. Lines wrap.
      */
     void scrollDisplayLeft();
     /**
-     * \fn void scrollDisplayRight()
      * \brief Scroll all digits 1 position to the right. Lines wrap.
      */
     void scrollDisplayRight();
     /**
-     * \fn void leftToRight()
      * \brief Set the writing direction to 'left to right'
      */
     inline void leftToRight() { _text_dir = TEXT_DIR_LEFT2RIGHT; };
     /**
-     * \fn void rightToLeft()
      * \brief Set the writing direction to 'right to left'
      */
     inline void rightToLeft() { _text_dir = TEXT_DIR_RIGHT2LEFT; };
     /**
-     * \fn void autoscroll()
      * \brief Sets the autoscroll function on.
      */
     inline void autoscroll() { _autoscroll = true; };
     /**
-     * \fn void noAutoscroll()
      * \brief Sets the autoscroll function off.
      */
     inline void noAutoscroll() { _autoscroll = false; };
     /**
-     * \fn void setCursor(uint8_t col, uint8_t row)
      * \brief Sets the cursor position
      * @param col Column of the cursor.
      * @param row Row of the cursor.
      * \warning No check is made to verify if the new position is valid.
      */
-    inline void setCursor(uint8_t col, uint8_t row) { _curs_col = col; _curs_row = row; };
+    //inline void setCursor(uint8_t col, uint8_t row) { _curs_col = col; _curs_row = row; };
     /**
-     * \fn size_t write(uint8_t car)
-     * \brief Writes one byte to the LCD memory. This function is used by the 'Print' interface to print all sort of input types.
-     * \warning Child classes should specialize more this function in order to correctly map LCD memory to LCD printable characters.
+     * \brief Writes one byte to the LCD memory. This function is used by the 'Print' interface to print 
+     * all sort of input types.
+     * \warning Child classes should specialize more this function in order to correctly map LCD memory to 
+     * LCD printable characters.
      * @param car Character to print
      */
     virtual size_t write(uint8_t);
     /**
-     * \fn size_t write(const uint8_t str[])
      * \brief Writes a string of bytes to the LCD memory. This function is used by the 'Print' interface.
-     * \warning Child classes should specialize more this function in order to correctly map LCD memory to LCD printable characters.
+     * \warning Child classes should specialize more this function in order to correctly map LCD memory to 
+     * LCD printable characters.
      * @param str String to print.
      * \warning It is assumed that the string is terminated by a '\0' symbol.
      */
@@ -178,39 +161,24 @@ public:
     
     using Print::write;
 protected:
-    /**
-     *  \var *ht
-     *  \brief Pointer to the class HT1621 driver.
-     */
     HT1621  *ht;    
     /**
      * @{
      * @name Cursor position
      */
-    /**
-     * \var _curs_col
-     * \brief column
-     */
     uint8_t _curs_col;
-    /**
-     * \var _curs_row
-     * \brief row
-     */
     uint8_t _curs_row;
     /** @} */
 private:
     /**
-     * \fn initLCD()
      * \brief Initialize the LCD with 256KHz internal RC oscillator, 1/3 Bias and 4 COM.
      */
     void initLCD();
     /**
-     * \var _text_dir
      * \brief Direction of text writing.
      */
     uint8_t _text_dir;
     /**
-     * \var _autoscroll
      * \brief Keep track is autoscroll function is active or not.
      */
     bool _autoscroll;
@@ -233,7 +201,8 @@ private:
      * @{
      * @name Display dimensions
      */
-    uint8_t _numrows /** \brief Number of rows */, _numcols /** \brief Number of columns */;
+    uint8_t _numrows; /** \brief Number of rows */ 
+    uint8_t _numcols; /** \brief Number of columns */
     /** @} */
 };
 

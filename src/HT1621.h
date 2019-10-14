@@ -99,7 +99,6 @@ protected:
     
 #ifndef __HT1621_READ
     /**
-     * \var ram[16]
      * This array is used to simulate the HT1621 internal ram whenever the read operations are not possible.
      * \warning Define the label __HT1621 to disable this feature and use standard read procedures.
      */
@@ -108,7 +107,6 @@ protected:
 
 public:
     /*!
-     * \enum Modes
      * Operating modes for the HT1621.
      */
     enum Modes : uint8_t {
@@ -120,12 +118,8 @@ public:
     };
     
     /*!
-     * \enum Commands
-     *
      * This is an enum of available commands for the HT1621.
-     *
      */
-
     enum Commands : uint8_t {
         SYS_DIS   = 0b00000000, /*!< System disable. It stops the bias generator and the system oscillator. */
         SYS_EN    = 0b00000010, /*!< System enable. It starts the bias generator and the system oscillator. */
@@ -175,7 +169,6 @@ public:
     };
     
     /**
-     * \fn HT1621(uint8_t CSpin, uint8_t RWpin, uint8_t DATApin)
      * \brief Constructor. Use begin() to complete the initialization of the chip.
      * @param \c CSpin Channel select pin.
      * @param \c RWpin Read/Write signal pin
@@ -183,12 +176,10 @@ public:
      */
     HT1621(uint8_t CSpin, uint8_t RWpin, uint8_t DATApin) : _CS_pin(CSpin), _DATA_pin(DATApin), _RW_pin(RWpin) {};
     /**
-     *  \fn void begin(void)
      *  \brief Init the HT1621. It inits the control bus. Moreover, it clears the (simulated) ram if \c __HT1621_READ is defined.
      */
     void begin(void);
     /**
-     * \fn void writeBits(uint8_t data, uint8_t cnt)
      * \brief Send bits to the HT1621.
      * @param data Data to be sent to the HT1621 seen as an array of bits.
      * @param cnt Number of bits to send to the HT1621.
@@ -202,7 +193,6 @@ public:
     void writeBitsReverse(uint32_t data, uint8_t cnt);
 
     /**
-     * \fn uint8_t readBits(uint8_t cnt)
      * \brief Reads bits from the HT1621.
      * @param cnt Number of bits to read. Maximal number of bits that can be read is 8.
      * \return uint8_t A byte containing the bits read. Last bit is the leftmost one.
@@ -213,8 +203,7 @@ public:
     uint8_t readBits(uint8_t cnt);
 #endif
     /**
-     * \fn void sendCommand(uint8_t cmd, bool first = true, bool last = true)
-     * \brief Sends a command to the HT1621.
+      * \brief Sends a command to the HT1621.
      * @param cmd Id of the command to send.
      * @param first If true CS is taken.
      * @param last  If true CS is released.
@@ -243,7 +232,6 @@ public:
     void writeArray(uint8_t address, uint8_t* array, uint8_t cnt);
 
     /** 
-     * \fn read(uint8_t address)
      * \brief Read memory content at address \c address
      * @param address Memory address to read from.
      * \return uint8_t A byte contained the date read.
@@ -251,7 +239,6 @@ public:
      */
     uint8_t read(uint8_t address);
     /**
-     * \fn void read(uint8_t address, uint8_t *data, uint8_t cnt)
      * \brief Read \c cnt bytes starting from \c address into buffer \c data.
      * @param address Memory address to read from.
      * @param data Buffer in which to store data read.

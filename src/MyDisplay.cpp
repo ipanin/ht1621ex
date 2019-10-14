@@ -7,7 +7,7 @@ public:
     void Init() {
         _ht.begin();
         _ht.sendCommand(HT1621::RC256K);
-        _ht.sendCommand(HT1621::BIAS_THIRD_4_COM);
+        _ht.sendCommand(HT1621::BIAS_THIRD_3_COM);
         _ht.sendCommand(HT1621::SYS_EN);
         _ht.sendCommand(HT1621::LCD_ON);
     }
