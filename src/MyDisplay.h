@@ -28,9 +28,8 @@ public:
 private:
     uint16_t _convert(uint8_t symbol);
 
-    static const uint16_t Font[11];
+    static const uint16_t Ascii[128];
     HT1621 _ht;
     const uint8_t HT1621_MAX_ADDR = 32;
     const uint8_t MaxDigits = 8; ///< Available number of digits in LCD (depend of LCD model)
-    const uint8_t StartAddress = 8;
 };
