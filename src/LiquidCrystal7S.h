@@ -2,8 +2,6 @@
  * \mainpage Liquid Crystal 7S
  *
  * \author Enrico Formenti
- * \date 14 february 2015
- * \version 1.11
  * \tableofcontents
  *
  * \section intro Introduction
@@ -53,8 +51,6 @@
  * \file LiquidCrystal7S.h
  * \brief An adaptation of LiquidCrystal library to deal with 7 segments LCD based on HT1621 chipset.
  * \author Enrico Formenti
- * \date 8 february 2015
- * \version 1.11
  * \copyright BSD license, check the License page on the blog for more information. All this text must be
  *  included in any redistribution.
  *  <br><br>
@@ -75,14 +71,14 @@
 class LiquidCrystal7S : public Print {
 public:
 
-    explicit LiquidCrystal7S(ILcdDisplay& pDisplay);
-
     /**
-     * \brief Init display and configure memory for \c rows and \c cols.
      * @param cols Number of display columns
      * @param rows Number of display rows
      */
-    void begin(uint8_t cols, uint8_t rows);
+    explicit LiquidCrystal7S(ILcdDisplay& display, uint8_t cols, uint8_t rows);
+
+    /// Init display
+    void begin();
 
     /**
      * \brief Clear the display
@@ -95,19 +91,19 @@ public:
      * \brief Reset cursor position ie. position it at (0,0).
      */
     inline void home() {
-        _curs_col = 0;
-        _curs_row = 0;
+        _cursorCol = 0;
+        _cursorRow = 0;
     };
 
     /**
      * \brief Turn off the display.
      */
-    inline void noDisplay() { _ht.noDisplay(); };
+    inline void noDisplay() { _display.noDisplay(); };
 
     /**
      * \brief Turn on the display.
      */
-    inline void display() { _ht.display(); };
+    inline void display() { _display.display(); };
 
     /**
      * \brief Scroll all digits 1 position to the left. Lines wrap.
@@ -144,7 +140,7 @@ public:
      * @param row Row of the cursor.
      * \warning No check is made to verify if the new position is valid.
      */
-    //inline void setCursor(uint8_t col, uint8_t row) { _curs_col = col; _curs_row = row; };
+    //inline void setCursor(uint8_t col, uint8_t row) { _cursorCol = col; _cursorRow = row; };
     /**
      * \brief Writes one byte to the LCD memory. This function is used by the 'Print' interface to print 
      * all sort of input types.
@@ -164,26 +160,25 @@ public:
     virtual size_t write(const uint8_t str[]);
 
 protected:
-    ILcdDisplay& _ht;
+    ILcdDisplay& _display;
     /**
      * @{
      * @name Cursor position
      */
-    uint8_t _curs_col;
-    uint8_t _curs_row;
+    uint8_t _cursorCol;
+    uint8_t _cursorRow;
     /** @} */
 
 private:
     uint8_t _text_dir; ///< Direction of text writing.
-
     bool _autoscroll; ///< Keep track is autoscroll function is active or not.
 
     /**
      * @{
      * @name Display dimensions
      */
-    uint8_t _numrows; ///< Number of rows
-    uint8_t _numcols; ///< Number of columns
+    uint8_t _numRows; ///< Number of rows
+    uint8_t _numCols; ///< Number of columns
     /** @} */
 };
 

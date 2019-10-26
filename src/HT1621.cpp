@@ -2,8 +2,6 @@
  * \file HT1621.cpp
  * \brief Implementation of a class for dealing with the Holtek HT1621 chip.
  * \author Enrico Formenti
- * \date 31 january 2015
- * \version 1.0
  * \copyright BSD license, check the License page on the blog for more information. All this text must be
  *  included in any redistribution.
  *  <br><br>
@@ -23,9 +21,7 @@ void HT1621::begin() {
     digitalWrite(_DATA_pin, HIGH);
 
 #ifndef __HT1621_READ
-    register uint8_t i;
-
-    for (i = 0; i < 16; i++)
+    for (uint8_t i = 0; i < MAX_ADDR; i++)
         ram[i] = 0;
 #endif
 
@@ -35,9 +31,7 @@ void HT1621::begin() {
 // nell'esempio dopo ogni write viene dato un delay
 // di 20 microsecondi...
 void HT1621::writeBits(uint8_t data, uint8_t cnt) {
-    register uint8_t i;
-
-    for (i = 0; i < cnt; i++, data <<= 1) {
+    for (uint8_t i = 0; i < cnt; i++, data <<= 1) {
         digitalWrite(_RW_pin, LOW);
         delayMicroseconds(20);
         digitalWrite(_DATA_pin, data & 0x80 ? HIGH : LOW);
@@ -48,9 +42,7 @@ void HT1621::writeBits(uint8_t data, uint8_t cnt) {
 }
 
 void HT1621::writeBitsReverse(uint32_t data, uint8_t cnt) {
-    register uint8_t i;
-
-    for (i = 0; i < cnt; i++, data >>= 1) {
+    for (uint8_t i = 0; i < cnt; i++, data >>= 1) {
         digitalWrite(_RW_pin, LOW);
         delayMicroseconds(20);
         digitalWrite(_DATA_pin, data & 1 ? HIGH : LOW);
@@ -64,12 +56,10 @@ void HT1621::writeBitsReverse(uint32_t data, uint8_t cnt) {
 
 uint8_t HT1621::readBits(uint8_t cnt)
 {
-    uint8_t data, i, state;
-    
-    
     pinMode(_DATA_pin, INPUT);
-    
-    for(i=0, data=0; i<cnt; data <<= 1, i++) {
+
+    uint8_t data = 0;
+    for(uint8_t i=0; i < cnt; data <<= 1, i++) {
         digitalWrite(_RW_pin, LOW);
         delayMicroseconds(20);
         data |= (digitalRead(_DATA_pin) == HIGH);
@@ -110,13 +100,11 @@ void HT1621::write(uint8_t address, uint32_t bits, uint8_t bit_cnt) {
 }
 
 void HT1621::writeArray(uint8_t address, uint8_t* array, uint8_t cnt) {
-    register uint8_t i;
-
     TAKE_CS();
 
     writeBits(WRITE_MODE, 3);
     writeBits(address << 2, 6);
-    for (i = 0; i < cnt; i++) {
+    for (uint8_t i = 0; i < cnt; i++) {
         writeBitsReverse(array[i], 4);
 #ifndef __HT1621_READ
         ram[i] = array[i];
@@ -145,13 +133,11 @@ uint8_t HT1621::read(uint8_t address)
 
 void HT1621::read(uint8_t address, uint8_t *data, uint8_t cnt)
 {
-    register uint8_t i;
-    
     TAKE_CS();
     
     writeBits(READ_MODE, 3);
     writeBits(address<<3, 6);
-    for (i = 0; i < cnt; i++)
+    for (uint8_t i = 0; i < cnt; i++)
         data[i] = readBits(8);
     
     RELEASE_CS();
@@ -164,9 +150,7 @@ uint8_t HT1621::read(uint8_t address) {
 }
 
 void HT1621::read(uint8_t address, uint8_t* data, uint8_t cnt) {
-    register uint8_t i;
-
-    for (i = 0; i < cnt; i++)
+    for (uint8_t i = 0; i < cnt; i++)
         data[i] = ram[address + i];
 }
 

@@ -1,6 +1,6 @@
 #include "MyDisplay.h"
 
-void MyDisplay::init() {
+void MyDisplay::begin() {
     _ht.begin();
     _ht.sendCommand(HT1621::RC256K);
     _ht.sendCommand(HT1621::BIAS_THIRD_3_COM);
@@ -9,21 +9,25 @@ void MyDisplay::init() {
 }
 
 void MyDisplay::clear() {
-    uint8_t i;
-    for (i = 0; i < HT1621_MAX_ADDR; i++)
+    for (uint8_t i = 0; i < _ht.MAX_ADDR; i++)
         _ht.write(i, 0);
+
+    memset(_buffer, 0, sizeof(_buffer));
 }
+
 // pos is calculated from left to right
-// each address points 4 bits
-// each char position takes 3*4 bits
 void MyDisplay::write(uint8_t pos, uint8_t symbol) {
+    _buffer[pos] = symbol;
     uint16_t data = _convert(symbol);
-    uint8_t address = HT1621_MAX_ADDR - 3 * (pos+1);
+
+    // each address points 4 bits
+    // so each char position takes 3*4 bits
+    uint8_t address = _ht.MAX_ADDR - 3 * (pos+1);
     _ht.write(address, data, 12);
 }
 
 uint8_t MyDisplay::read(uint8_t pos) {
-    return 0;
+    return _buffer[pos];
 }
 
 uint16_t MyDisplay::_convert(uint8_t symbol) {
@@ -65,7 +69,7 @@ uint16_t MyDisplay::_convert(uint8_t symbol) {
 #define G_6 (S_A +  0  + S_C + S_D + S_E + S_F + S_G)
 #define G_7 (S_A + S_B + S_C +  0  +  0  +  0  +  0 )
 #define G_8 (S_A + S_B + S_C + S_D + S_E + S_F + S_G)
-#define G_9 (S_A + S_B + S_C +  0  +  0  + S_F + S_G)
+#define G_9 (S_A + S_B + S_C + S_D +  0  + S_F + S_G)
 
 // special
 #define G_space 0

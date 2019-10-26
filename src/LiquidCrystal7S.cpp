@@ -12,63 +12,71 @@
 
 #include "LiquidCrystal7S.h"
 
-LiquidCrystal7S::LiquidCrystal7S(ILcdDisplay& pDisplay) : _ht(pDisplay) {
-    _ht.init();
+LiquidCrystal7S::LiquidCrystal7S(ILcdDisplay& display, uint8_t cols, uint8_t lines)
+: _display(display), _numCols(cols), _numRows(lines), _text_dir(TEXT_DIR_LEFT2RIGHT), _autoscroll(false){
 }
 
-void LiquidCrystal7S::begin(uint8_t cols, uint8_t lines) {
-    _numcols = cols;
-    _numrows = lines;
-    _text_dir = TEXT_DIR_LEFT2RIGHT;
-    _autoscroll = false;
-
+void LiquidCrystal7S::begin() {
+    _display.begin();
     clear();
 }
 
 void LiquidCrystal7S::clear() {
-    _ht.clear();
+    _display.clear();
     home();
 }
 
 void LiquidCrystal7S::scrollDisplayLeft() {
-    _curs_col = (_curs_col + _numcols - 1) % _numcols; // move cursor right
+    _cursorCol = (_cursorCol + _numCols - 1) % _numCols; // move cursor left circular
 
-    for (uint8_t i = 0; i < _numrows; i++) {
-        uint8_t saveFirst = _ht.read(i * _numcols);
-        for (uint8_t j = _numcols - 1; j > 0; j--)
-            _ht.write(i * _numcols + j, _ht.read(i * _numcols + j + 1));
-        _ht.write((i + 1) * _numcols - 1, saveFirst);
+    // rotate each row independent
+    for (uint8_t i = 0; i < _numRows; i++) {
+        uint8_t firstInCurrentRow = i * _numCols;
+        uint8_t lastInCurrentRow = (i+1) * _numCols - 1;
+        uint8_t savedFirst = _display.read(firstInCurrentRow);
+
+        for (uint8_t j = firstInCurrentRow; j < lastInCurrentRow; j++) {
+            _display.write(j, _display.read(j + 1));
+        }
+
+        _display.write(lastInCurrentRow, savedFirst);
     }
 }
 
 void LiquidCrystal7S::scrollDisplayRight() {
-    _curs_col = (_curs_col + 1) % _numcols; // move cursor right
+    _cursorCol = (_cursorCol + 1) % _numCols; // move cursor right circular
 
-    for (uint8_t i = 0; i < _numrows; i++) {
-        uint8_t saveLast = _ht.read((i + 1) * _numcols - 1);
-        for (uint8_t j = 1; j < _numcols; j++)
-            _ht.write(i * _numcols + j, _ht.read(i * _numcols + j - 1));
-        _ht.write(i * _numcols, saveLast);
+    // rotate each row independent
+    for (uint8_t i = 0; i < _numRows; i++) {
+        uint8_t firstInCurrentRow = i * _numCols;
+        uint8_t lastInCurrentRow = (i+1) * _numCols - 1;
+        uint8_t saveLast = _display.read(lastInCurrentRow);
+
+        for (uint8_t j = lastInCurrentRow; j > firstInCurrentRow; j--) {
+            _display.write(j, _display.read(j - 1));
+        }
+        _display.write(firstInCurrentRow, saveLast);
     }
 }
 
 size_t LiquidCrystal7S::write(uint8_t value) {
     if (_autoscroll) {
-        if (_text_dir == TEXT_DIR_LEFT2RIGHT && (_curs_col + 1 > _numcols)) {
+        if (_text_dir == TEXT_DIR_LEFT2RIGHT && (_cursorCol + 1 >= _numCols)) {
             scrollDisplayLeft();
         }
-        else if (_text_dir == TEXT_DIR_RIGHT2LEFT && (_curs_col == 0)) {
+        else if (_text_dir == TEXT_DIR_RIGHT2LEFT && (_cursorCol == 0)) {
             scrollDisplayRight();
         }
     }
-    _ht.write(_curs_row * _numcols + _curs_col, value);
+
+    _display.write(_cursorRow * _numCols + _cursorCol, value);
 
     // update cursor position according to direction
     if (_text_dir == TEXT_DIR_LEFT2RIGHT) {
-        _curs_col = (_curs_col + 1) % _numcols;
+        _cursorCol = (_cursorCol + 1) % _numCols;
     }
     else { // _text_dir = TEXT_DIR_RIGHT2LEFT
-        _curs_col = (_curs_col + _numcols - 1) % _numcols;
+        _cursorCol = (_cursorCol + _numCols - 1) % _numCols;
     }
     // assume success
     return 1;

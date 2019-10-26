@@ -2,8 +2,6 @@
  * \mainpage Holtek HT1621
  *
  * \author Enrico Formenti
- * \date 31 january 2015
- * \version 1.0
  * \tableofcontents
  * \section sec_intro Introduction
  * The Holtek HT1621 is multi-function LCD driver with a 32x4 memory mapping capability. It has a simple
@@ -61,8 +59,6 @@
 /**
  * \file HT1621.h
  * \brief A class for dealing with the Holtek HT1621 chip.
- * \author Enrico Formenti
- * \date 31 january 2015
  * \version 1.0
  * \copyright BSD license, check the License page on the blog for more information. All this text must be
  *  included in any redistribution.
@@ -92,21 +88,6 @@
 
 
 class HT1621 {
-private:
-    uint8_t _CS_pin;
-    uint8_t _DATA_pin;
-    uint8_t _RW_pin;
-
-protected:
-
-#ifndef __HT1621_READ
-    /**
-     * This array is used to simulate the HT1621 internal ram whenever the read operations are not possible.
-     * \warning Define the label __HT1621 to disable this feature and use standard read procedures.
-     */
-    uint8_t ram[16];
-#endif
-
 public:
     /*!
      * Operating modes for the HT1621.
@@ -145,7 +126,7 @@ public:
 
         //Set bias to 1/2 or 1/3 cycle
         //Set to 2,3 or 4 connected COM lines
-                BIAS_HALF_2_COM = 0b01000000, /*!< Use 1/2 bias and 2 commons. */
+        BIAS_HALF_2_COM = 0b01000000, /*!< Use 1/2 bias and 2 commons. */
         BIAS_HALF_3_COM = 0b01001000, /*!< Use 1/2 bias and 3 commons. */
         BIAS_HALF_4_COM = 0b01010000, /*!< Use 1/2 bias and 4 commons. */
         BIAS_THIRD_2_COM = 0b01000010, /*!< Use 1/3 bias and 2 commons. */
@@ -156,7 +137,7 @@ public:
         IRQ_DIS = 0b00010000, /*!< Disables IRQ output. This needs to be excuted in SPECIAL_MODE. */
 
         // WDT configuration commands
-                F1 = 0b01000000, /*!< Time base/WDT clock. Output = 1Hz. Time-out = 4s. This needs to be excuted in SPECIAL_MODE. */
+        F1 = 0b01000000, /*!< Time base/WDT clock. Output = 1Hz. Time-out = 4s. This needs to be excuted in SPECIAL_MODE. */
         F2 = 0b01000010, /*!< Time base/WDT clock. Output = 2Hz. Time-out = 2s. This needs to be excuted in SPECIAL_MODE. */
         F4 = 0b01000100, /*!< Time base/WDT clock. Output = 4Hz. Time-out = 1s. This needs to be excuted in SPECIAL_MODE. */
         F8 = 0b01000110, /*!< Time base/WDT clock. Output = 8Hz. Time-out = .5s. This needs to be excuted in SPECIAL_MODE. */
@@ -166,10 +147,11 @@ public:
         F128 = 0b01001110, /*!< Time base/WDT clock. Output = 128Hz. Time-out = .03125s. This needs to be excuted in SPECIAL_MODE. */
 
         //Don't use
-                TEST_ON = 0b11000000, /*!< Don't use! Only for manifacturers. This needs SPECIAL_MODE. */
+        TEST_ON = 0b11000000, /*!< Don't use! Only for manifacturers. This needs SPECIAL_MODE. */
         TEST_OFF = 0b11000110  /*!< Don't use! Only for manifacturers. This needs SPECIAL_MODE. */
     };
 
+    static const uint8_t MAX_ADDR = 32;
     /**
      * \brief Constructor. Use begin() to complete the initialization of the chip.
      * @param \c CSpin Channel select pin.
@@ -238,21 +220,35 @@ public:
 
     /** 
      * \brief Read memory content at address \c address
-     * @param address Memory address to read from.
-     * \return uint8_t A byte contained the date read.
+     * @param address Memory address to read from (maximum is 31).
+     * \return uint8_t Contains 4 read bits.
      * \warning There is no check to verify if the address is valid.
      */
     uint8_t read(uint8_t address);
 
     /**
-     * \brief Read \c cnt bytes starting from \c address into buffer \c data.
-     * @param address Memory address to read from.
-     * @param data Buffer in which to store data read.
-     * @param cnt Number of bytes to read.
+     * \brief Read \c cnt 4-bit values starting from \c address into buffer \c data.
+     * @param address Memory address to read from (maximum is 31).
+     * @param data Buffer to store result. Only low 4 bits in each element are meaningful.
+     * @param cnt Number of values to read.
      * \warning There is no check to verify if the address is valid.
      * \warning There is no check that the buffer is of suitable length.
      */
     void read(uint8_t address, uint8_t* data, uint8_t cnt);
+
+private:
+    uint8_t _CS_pin;
+    uint8_t _DATA_pin;
+    uint8_t _RW_pin;
+
+#ifndef __HT1621_READ
+    /**
+     * This array is used to simulate the HT1621 internal ram whenever the read operations are not possible.
+     * \warning Define the label __HT1621 to disable this feature and use standard read procedures.
+     * Only low 4 bits in each element are meaningful.
+     */
+    uint8_t ram[MAX_ADDR];
+#endif
 };
 
 #endif

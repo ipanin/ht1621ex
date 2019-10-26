@@ -1,5 +1,5 @@
-
-void initLCD();
+#ifndef _MY_DISPLAY_H_INCLUDED_
+#define _MY_DISPLAY_H_INCLUDED_
 
 #include "ILcdDisplay.h"
 #include "HT1621.h"
@@ -10,7 +10,7 @@ public:
     MyDisplay(uint8_t ss, uint8_t rw, uint8_t data) : _ht(ss, rw, data) {}
 
     /// Initialize the LCD with 256KHz internal RC oscillator, 1/3 Bias and 4 COM.
-    virtual void init();
+    virtual void begin();
 
     /// clear display
     virtual void clear();
@@ -29,7 +29,9 @@ private:
     uint16_t _convert(uint8_t symbol);
 
     static const uint16_t Ascii[128];
+    static const uint8_t MaxDigits = 8; ///< Available number of digits in my LCD
+    uint8_t _buffer[MaxDigits];
     HT1621 _ht;
-    const uint8_t HT1621_MAX_ADDR = 32;
-    const uint8_t MaxDigits = 8; ///< Available number of digits in LCD (depend of LCD model)
 };
+
+#endif // _MY_DISPLAY_H_INCLUDED_
