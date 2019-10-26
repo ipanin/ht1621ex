@@ -13,49 +13,44 @@
 
 #include "HT1621.h"
 
-void HT1621::begin()
-{
+void HT1621::begin() {
     pinMode(_DATA_pin, OUTPUT);
     pinMode(_RW_pin, OUTPUT);
     pinMode(_CS_pin, OUTPUT);
- 
+
     digitalWrite(_CS_pin, HIGH);
     digitalWrite(_RW_pin, HIGH);
     digitalWrite(_DATA_pin, HIGH);
 
 #ifndef __HT1621_READ
     register uint8_t i;
-    
-    for(i=0; i<16; i++)
+
+    for (i = 0; i < 16; i++)
         ram[i] = 0;
 #endif
-    
+
 }
 
 // OCIO !!!
 // nell'esempio dopo ogni write viene dato un delay
 // di 20 microsecondi...
-void HT1621::writeBits(uint8_t data, uint8_t cnt)
-{
+void HT1621::writeBits(uint8_t data, uint8_t cnt) {
     register uint8_t i;
 
-    for(i=0;i<cnt;i++,data <<=1)
-    {
+    for (i = 0; i < cnt; i++, data <<= 1) {
         digitalWrite(_RW_pin, LOW);
         delayMicroseconds(20);
-        digitalWrite(_DATA_pin, data&0x80 ? HIGH : LOW);
+        digitalWrite(_DATA_pin, data & 0x80 ? HIGH : LOW);
         delayMicroseconds(20);
         digitalWrite(_RW_pin, HIGH);
         delayMicroseconds(20);
     }
 }
 
-void HT1621::writeBitsReverse(uint32_t data, uint8_t cnt)
-{
+void HT1621::writeBitsReverse(uint32_t data, uint8_t cnt) {
     register uint8_t i;
 
-    for (i = 0; i < cnt; i++, data >>= 1)
-    {
+    for (i = 0; i < cnt; i++, data >>= 1) {
         digitalWrite(_RW_pin, LOW);
         delayMicroseconds(20);
         digitalWrite(_DATA_pin, data & 1 ? HIGH : LOW);
@@ -64,6 +59,7 @@ void HT1621::writeBitsReverse(uint32_t data, uint8_t cnt)
         delayMicroseconds(20);
     }
 }
+
 #ifdef __HT1621_READ
 
 uint8_t HT1621::readBits(uint8_t cnt)
@@ -88,48 +84,45 @@ uint8_t HT1621::readBits(uint8_t cnt)
 
 #endif
 
-void HT1621::sendCommand(uint8_t cmd, bool first, bool last)
-{
+void HT1621::sendCommand(uint8_t cmd, bool first, bool last) {
     if (first) {
         TAKE_CS();
         writeBits(COMMAND_MODE, 4);
     }
-    
+
     writeBits(cmd, 8);
-    
+
     if (last)
         RELEASE_CS();
 }
 
-void HT1621::write(uint8_t address, uint32_t bits, uint8_t bit_cnt)
-{
+void HT1621::write(uint8_t address, uint32_t bits, uint8_t bit_cnt) {
     TAKE_CS();
-    
+
     writeBits(WRITE_MODE, 3);
-    writeBits(address<<2, 6); // send only 6 bit, starting from more significant
+    writeBits(address << 2, 6); // send only 6 bit, starting from more significant
     writeBitsReverse(bits, bit_cnt);
 #ifndef __HT1621_READ
     //ram[address] = bits; // TODO
 #endif
-    
+
     RELEASE_CS();
 }
 
-void HT1621::writeArray(uint8_t address, uint8_t* array, uint8_t cnt)
-{
+void HT1621::writeArray(uint8_t address, uint8_t* array, uint8_t cnt) {
     register uint8_t i;
-    
+
     TAKE_CS();
-    
+
     writeBits(WRITE_MODE, 3);
-    writeBits(address<<2, 6);
+    writeBits(address << 2, 6);
     for (i = 0; i < cnt; i++) {
         writeBitsReverse(array[i], 4);
 #ifndef __HT1621_READ
         ram[i] = array[i];
 #endif
     }
-    
+
     RELEASE_CS();
 }
 
@@ -166,17 +159,15 @@ void HT1621::read(uint8_t address, uint8_t *data, uint8_t cnt)
 
 #else
 
-uint8_t HT1621::read(uint8_t address)
-{
+uint8_t HT1621::read(uint8_t address) {
     return ram[address];
 }
 
-void HT1621::read(uint8_t address, uint8_t *data, uint8_t cnt)
-{
+void HT1621::read(uint8_t address, uint8_t* data, uint8_t cnt) {
     register uint8_t i;
-    
+
     for (i = 0; i < cnt; i++)
-        data[i] = ram[address+i];
+        data[i] = ram[address + i];
 }
 
 #endif

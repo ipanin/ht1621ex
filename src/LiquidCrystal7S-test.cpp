@@ -9,10 +9,10 @@ MyDisplay display(SS, RW, DATA);
 LiquidCrystal7S lcd(&display);
 
 void setup() {
-  lcd.begin(8, 1);
-  lcd.print(12345678); 
+    lcd.begin(8, 1);
+    lcd.print(12345678);
 }
 
 void loop() {
-	
+
 }

@@ -78,7 +78,9 @@
 #if ARDUINO >= 100
 #include "Arduino.h"
 #else
+
 #include "WProgram.h"
+
 #endif
 
 #define TAKE_CS()    digitalWrite(_CS_pin, LOW)
@@ -96,7 +98,7 @@ private:
     uint8_t _RW_pin;
 
 protected:
-    
+
 #ifndef __HT1621_READ
     /**
      * This array is used to simulate the HT1621 internal ram whenever the read operations are not possible.
@@ -116,45 +118,45 @@ public:
         READ_MODIFY_WRITE_MODE = 0b10100000, /*!< This instructs the HT1621 to prepare for reading/modifying batch of internal RAM adresses. */
         SPECIAL_MODE = 0b10010000 /*!< This instructs the HT1621 to prepare for executing a special command. */
     };
-    
+
     /*!
      * This is an enum of available commands for the HT1621.
      */
     enum Commands : uint8_t {
-        SYS_DIS   = 0b00000000, /*!< System disable. It stops the bias generator and the system oscillator. */
-        SYS_EN    = 0b00000010, /*!< System enable. It starts the bias generator and the system oscillator. */
-        LCD_OFF   = 0b00000100, /*!< Turn off the bias generator. */
-        LCD_ON    = 0b00000110, /*!< Turn on the bias generator. */
+        SYS_DIS = 0b00000000, /*!< System disable. It stops the bias generator and the system oscillator. */
+        SYS_EN = 0b00000010, /*!< System enable. It starts the bias generator and the system oscillator. */
+        LCD_OFF = 0b00000100, /*!< Turn off the bias generator. */
+        LCD_ON = 0b00000110, /*!< Turn on the bias generator. */
         TIMER_DIS = 0b00001000, /*!< Disable time base output. */
-        WDT_DIS   = 0b00001010, /*!< Watch-dog timer disable. */
-        TIMER_EN  = 0b00001100, /*!< Enable time base output. */
-        WDT_EN    = 0b00001110, /*!< Watch-dog timer enable. The timer is reset. */
+        WDT_DIS = 0b00001010, /*!< Watch-dog timer disable. */
+        TIMER_EN = 0b00001100, /*!< Enable time base output. */
+        WDT_EN = 0b00001110, /*!< Watch-dog timer enable. The timer is reset. */
         CLR_TIMER = 0b00011000, /*!< Clear the contents of the time base generator. */
-        CLR_WDT   = 0b00011100, /*!< Clear the contents of the watch-dog stage. */
+        CLR_WDT = 0b00011100, /*!< Clear the contents of the watch-dog stage. */
 
-        TONE_OFF  = 0b00010000, /*!< Stop emitting the tone signal at the tone pin. \sa TONE2K, TONE4K */
-        TONE_ON   = 0b00010010, /*!< Start emitting tone signal at the tone pin. Tone frequency is selected using commands TONE2K or TONE4K. \sa TONE2K, TONE4K */
-        TONE2K    = 0b11000000, /*!< Output tone is at 2kHz. */
-        TONE4K    = 0b10000000, /*!< Output tone is at 4kHz. */
-        
-        RC256K    = 0b00110000, /*!< System oscillator is the internal RC oscillator at 256kHz. */
-        XTAL32K   = 0b00101000, /*!< System oscillator is the crystal oscillator at 32768Hz. */
-        EXT256K   = 0b00111000, /*!< System oscillator is an external oscillator at 256kHz. */
-        
+        TONE_OFF = 0b00010000, /*!< Stop emitting the tone signal at the tone pin. \sa TONE2K, TONE4K */
+        TONE_ON = 0b00010010, /*!< Start emitting tone signal at the tone pin. Tone frequency is selected using commands TONE2K or TONE4K. \sa TONE2K, TONE4K */
+        TONE2K = 0b11000000, /*!< Output tone is at 2kHz. */
+        TONE4K = 0b10000000, /*!< Output tone is at 4kHz. */
+
+        RC256K = 0b00110000, /*!< System oscillator is the internal RC oscillator at 256kHz. */
+        XTAL32K = 0b00101000, /*!< System oscillator is the crystal oscillator at 32768Hz. */
+        EXT256K = 0b00111000, /*!< System oscillator is an external oscillator at 256kHz. */
+
         //Set bias to 1/2 or 1/3 cycle
         //Set to 2,3 or 4 connected COM lines
-        BIAS_HALF_2_COM  = 0b01000000, /*!< Use 1/2 bias and 2 commons. */
-        BIAS_HALF_3_COM  = 0b01001000, /*!< Use 1/2 bias and 3 commons. */
-        BIAS_HALF_4_COM  = 0b01010000, /*!< Use 1/2 bias and 4 commons. */
+                BIAS_HALF_2_COM = 0b01000000, /*!< Use 1/2 bias and 2 commons. */
+        BIAS_HALF_3_COM = 0b01001000, /*!< Use 1/2 bias and 3 commons. */
+        BIAS_HALF_4_COM = 0b01010000, /*!< Use 1/2 bias and 4 commons. */
         BIAS_THIRD_2_COM = 0b01000010, /*!< Use 1/3 bias and 2 commons. */
         BIAS_THIRD_3_COM = 0b01001010, /*!< Use 1/3 bias and 3 commons. */
         BIAS_THIRD_4_COM = 0b01010010, /*!< Use 1/3 bias and 4 commons. */
-        
-        IRQ_EN    = 0b00010000, /*!< Enables IRQ output. This needs to be excuted in SPECIAL_MODE. */
-        IRQ_DIS   = 0b00010000, /*!< Disables IRQ output. This needs to be excuted in SPECIAL_MODE. */
-        
+
+        IRQ_EN = 0b00010000, /*!< Enables IRQ output. This needs to be excuted in SPECIAL_MODE. */
+        IRQ_DIS = 0b00010000, /*!< Disables IRQ output. This needs to be excuted in SPECIAL_MODE. */
+
         // WDT configuration commands
-        F1 = 0b01000000, /*!< Time base/WDT clock. Output = 1Hz. Time-out = 4s. This needs to be excuted in SPECIAL_MODE. */
+                F1 = 0b01000000, /*!< Time base/WDT clock. Output = 1Hz. Time-out = 4s. This needs to be excuted in SPECIAL_MODE. */
         F2 = 0b01000010, /*!< Time base/WDT clock. Output = 2Hz. Time-out = 2s. This needs to be excuted in SPECIAL_MODE. */
         F4 = 0b01000100, /*!< Time base/WDT clock. Output = 4Hz. Time-out = 1s. This needs to be excuted in SPECIAL_MODE. */
         F8 = 0b01000110, /*!< Time base/WDT clock. Output = 8Hz. Time-out = .5s. This needs to be excuted in SPECIAL_MODE. */
@@ -162,12 +164,12 @@ public:
         F32 = 0b01001010, /*!< Time base/WDT clock. Output = 32Hz. Time-out = .125s. This needs to be excuted in SPECIAL_MODE. */
         F64 = 0b01001100, /*!< Time base/WDT clock. Output = 64Hz. Time-out = .0625s. This needs to be excuted in SPECIAL_MODE. */
         F128 = 0b01001110, /*!< Time base/WDT clock. Output = 128Hz. Time-out = .03125s. This needs to be excuted in SPECIAL_MODE. */
-        
+
         //Don't use
-        TEST_ON   = 0b11000000, /*!< Don't use! Only for manifacturers. This needs SPECIAL_MODE. */
-        TEST_OFF  = 0b11000110  /*!< Don't use! Only for manifacturers. This needs SPECIAL_MODE. */
+                TEST_ON = 0b11000000, /*!< Don't use! Only for manifacturers. This needs SPECIAL_MODE. */
+        TEST_OFF = 0b11000110  /*!< Don't use! Only for manifacturers. This needs SPECIAL_MODE. */
     };
-    
+
     /**
      * \brief Constructor. Use begin() to complete the initialization of the chip.
      * @param \c CSpin Channel select pin.
@@ -175,10 +177,12 @@ public:
      * @param \c DATApin Data pin both for reading or writing data.
      */
     HT1621(uint8_t CSpin, uint8_t RWpin, uint8_t DATApin) : _CS_pin(CSpin), _DATA_pin(DATApin), _RW_pin(RWpin) {};
+
     /**
      *  \brief Init the HT1621. It inits the control bus. Moreover, it clears the (simulated) ram if \c __HT1621_READ is defined.
      */
     void begin(void);
+
     /**
      * \brief Send bits to the HT1621.
      * @param data Data to be sent to the HT1621 seen as an array of bits.
@@ -202,6 +206,7 @@ public:
 #ifdef __HT1621_READ
     uint8_t readBits(uint8_t cnt);
 #endif
+
     /**
       * \brief Sends a command to the HT1621.
      * @param cmd Id of the command to send.
@@ -238,6 +243,7 @@ public:
      * \warning There is no check to verify if the address is valid.
      */
     uint8_t read(uint8_t address);
+
     /**
      * \brief Read \c cnt bytes starting from \c address into buffer \c data.
      * @param address Memory address to read from.

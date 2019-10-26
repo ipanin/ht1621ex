@@ -1,4 +1,3 @@
-
 /**
  * \mainpage Liquid Crystal 7S
  *
@@ -75,57 +74,66 @@
 
 class LiquidCrystal7S : public Print {
 public:
-    /**
-     * \brief Constructor. 
-     */
-    LiquidCrystal7S(ILcdDisplay* pDisplay);
-    
-    inline ~LiquidCrystal7S() { delete ht; }
-    
+
+    LiquidCrystal7S(ILcdDisplay& pDisplay);
+
     /**
      * \brief Init display and configure memory for \c rows and \c cols.
      * @param cols Number of display columns
      * @param rows Number of display rows
      */
     void begin(uint8_t cols, uint8_t rows);
+
     /**
      * \brief Clear the display
      * \warning Only row and columns are cleared. If the display has 'special' addresses for displaying special symbols
      * then these are not cleared.
      */
     void clear();
+
     /**
      * \brief Reset cursor position ie. position it at (0,0).
      */
-    inline void home() { _curs_col = 0; _curs_row = 0; };
+    inline void home() {
+        _curs_col = 0;
+        _curs_row = 0;
+    };
+
     /**
      * \brief Turn off the display.
      */
-    inline void noDisplay() { ht->noDisplay(); };
+    inline void noDisplay() { _ht.noDisplay(); };
+
     /**
      * \brief Turn on the display.
      */
-    inline void display() { ht->display(); };
+    inline void display() { _ht.display(); };
+
     /**
      * \brief Scroll all digits 1 position to the left. Lines wrap.
      */
     void scrollDisplayLeft();
+
     /**
      * \brief Scroll all digits 1 position to the right. Lines wrap.
      */
     void scrollDisplayRight();
+
     /**
      * \brief Set the writing direction to 'left to right'
      */
     inline void leftToRight() { _text_dir = TEXT_DIR_LEFT2RIGHT; };
+
     /**
      * \brief Set the writing direction to 'right to left'
      */
     inline void rightToLeft() { _text_dir = TEXT_DIR_RIGHT2LEFT; };
+
     /**
      * \brief Sets the autoscroll function on.
      */
     inline void autoscroll() { _autoscroll = true; };
+
     /**
      * \brief Sets the autoscroll function off.
      */
@@ -145,6 +153,7 @@ public:
      * @param car Character to print
      */
     virtual size_t write(uint8_t);
+
     /**
      * \brief Writes a string of bytes to the LCD memory. This function is used by the 'Print' interface.
      * \warning Child classes should specialize more this function in order to correctly map LCD memory to 
@@ -153,10 +162,9 @@ public:
      * \warning It is assumed that the string is terminated by a '\0' symbol.
      */
     virtual size_t write(const uint8_t str[]);
-    
-    //using Print::write;
+
 protected:
-    ILcdDisplay* ht;    
+    ILcdDisplay& _ht;
     /**
      * @{
      * @name Cursor position
@@ -164,22 +172,18 @@ protected:
     uint8_t _curs_col;
     uint8_t _curs_row;
     /** @} */
+
 private:
-    /**
-     * \brief Direction of text writing.
-     */
-    uint8_t _text_dir;
-    /**
-     * \brief Keep track is autoscroll function is active or not.
-     */
-    bool _autoscroll;
-     
+    uint8_t _text_dir; ///< Direction of text writing.
+
+    bool _autoscroll; ///< Keep track is autoscroll function is active or not.
+
     /**
      * @{
      * @name Display dimensions
      */
-    uint8_t _numrows; /** \brief Number of rows */ 
-    uint8_t _numcols; /** \brief Number of columns */
+    uint8_t _numrows; ///< Number of rows
+    uint8_t _numcols; ///< Number of columns
     /** @} */
 };
 
