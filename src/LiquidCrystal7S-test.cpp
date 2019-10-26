@@ -6,7 +6,7 @@
 #define DATA 4
 
 MyDisplay display(SS, RW, DATA);
-LiquidCrystal7S lcd(&display);
+LiquidCrystal7S lcd(display);
 
 void setup() {
     lcd.begin(8, 1);

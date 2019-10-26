@@ -35,3 +35,9 @@
 .pio
 .vscode
 platformio.ini
+
+#CLion
+.idea
+cmake*
+cmake/*
+CMakeLists.txt

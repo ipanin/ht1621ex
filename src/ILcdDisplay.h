@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 #include <string.h>
-#include <HT1621.h>
+#include "HT1621.h"
 
 class ILcdDisplay {
 public:

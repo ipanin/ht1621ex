@@ -12,8 +12,7 @@
 
 #include "LiquidCrystal7S.h"
 
-LiquidCrystal7S::LiquidCrystal7S(ILcdDisplay& pDisplay) {
-    _ht = pDisplay;
+LiquidCrystal7S::LiquidCrystal7S(ILcdDisplay& pDisplay) : _ht(pDisplay) {
     _ht.init();
 }
 
@@ -38,9 +37,9 @@ void LiquidCrystal7S::scrollDisplayLeft(void) {
     _curs_col = (_curs_col + _numcols - 1) % _numcols; // move cursor right
 
     for (i = 0; i < _numrows; i++) {
-        saveFirst = ht.read(i * _numcols);
+        saveFirst = _ht.read(i * _numcols);
         for (j = _numcols - 1; j > 0; j--)
-            ht.write(i * _numcols + j, ht.read(i * _numcols + j + 1));
+            _ht.write(i * _numcols + j, _ht.read(i * _numcols + j + 1));
         _ht.write((i + 1) * _numcols - 1, saveFirst);
     }
 }
