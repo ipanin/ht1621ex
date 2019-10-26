@@ -19,32 +19,10 @@
  * The communication protocol (3-Wire vs. 4-Wire) is chosen at the constructor level. Using the k-parameters constructor selects
  * the k-Wire protocol.
  *
- * \section examples The examples
- * Here is a very basic example that initializes the LCD and displays the character 0xBE (on my LCD this is the digit '0') 
- * on all the available places.
- * \snippet LiquidCrystal7S-test.ino Setting all digits to 0xBE
- *
- * And here is a sketch which prints a string of three 0xBE characters ('0' on my LCD).
- * \snippet PrintString.ino Printing a string
- *
  * \section install Installing the library
  * Go into the directory of Arduino's local library (look into the IDE preferences if you don't know where it is). Create a
  * directory named 'LiquidCrystal7S' and copy all the files and the directories that you have found in the zip file.
  *
- * \section todo Todo
- * - Improve the documentation
- * - Improve the printing capabilities
- * - Generalize the library to work also with similar chipsets e.g. HT1623, HT1625, etc.
- *
- * \section histo Version history
- * \subsection v1_0 Version 1.0
- * This is the initial version.
- * \subsection v1_1 Version 1.1
- * - Fixed return value in function LiquidCrystal7S::write(const uint8_t str[])
- * - Variables LiquidCrystal::_curs_col and LiquidCrystal::_curs_row changed from private to protected
- * \subsection v1_11 Version 1.11
- * - Introduced the functions LiquidCrystal7S::autoscroll() and LiquidCrystal7S::noAutoscroll()
- * and the relative control variable LiquidCrystal::_autoscroll
  */
 
 /**
@@ -60,22 +38,14 @@
 #ifndef LiquidCrystal7S_h
 #define LiquidCrystal7S_h
 
-#include <inttypes.h>
-#include <string.h>
 #include <Print.h>
 #include "ILcdDisplay.h"
-
-#define TEXT_DIR_LEFT2RIGHT 1
-#define TEXT_DIR_RIGHT2LEFT 0
 
 class LiquidCrystal7S : public Print {
 public:
 
-    /**
-     * @param cols Number of display columns
-     * @param rows Number of display rows
-     */
-    explicit LiquidCrystal7S(ILcdDisplay& display, uint8_t cols, uint8_t rows);
+    /// @param cols Number of display columns
+    explicit LiquidCrystal7S(ILcdDisplay& display, uint8_t cols);
 
     /// Init display
     void begin();
@@ -92,7 +62,6 @@ public:
      */
     inline void home() {
         _cursorCol = 0;
-        _cursorRow = 0;
     };
 
     /**
@@ -116,31 +85,16 @@ public:
     void scrollDisplayRight();
 
     /**
-     * \brief Set the writing direction to 'left to right'
-     */
-    inline void leftToRight() { _text_dir = TEXT_DIR_LEFT2RIGHT; };
-
-    /**
-     * \brief Set the writing direction to 'right to left'
-     */
-    inline void rightToLeft() { _text_dir = TEXT_DIR_RIGHT2LEFT; };
-
-    /**
      * \brief Sets the autoscroll function on.
      */
-    inline void autoscroll() { _autoscroll = true; };
+    inline void autoscroll(bool enabled = true) { _autoscroll = enabled; };
 
-    /**
-     * \brief Sets the autoscroll function off.
-     */
-    inline void noAutoscroll() { _autoscroll = false; };
     /**
      * \brief Sets the cursor position
      * @param col Column of the cursor.
-     * @param row Row of the cursor.
      * \warning No check is made to verify if the new position is valid.
      */
-    //inline void setCursor(uint8_t col, uint8_t row) { _cursorCol = col; _cursorRow = row; };
+    inline void setCursor(uint8_t col) { _cursorCol = col; };
     /**
      * \brief Writes one byte to the LCD memory. This function is used by the 'Print' interface to print 
      * all sort of input types.
@@ -161,25 +115,11 @@ public:
 
 protected:
     ILcdDisplay& _display;
-    /**
-     * @{
-     * @name Cursor position
-     */
-    uint8_t _cursorCol;
-    uint8_t _cursorRow;
-    /** @} */
+    uint8_t _cursorCol; ///< Cursor position
 
 private:
-    uint8_t _text_dir; ///< Direction of text writing.
     bool _autoscroll; ///< Keep track is autoscroll function is active or not.
-
-    /**
-     * @{
-     * @name Display dimensions
-     */
-    uint8_t _numRows; ///< Number of rows
     uint8_t _numCols; ///< Number of columns
-    /** @} */
 };
 
 #endif
