@@ -30,29 +30,23 @@ void LiquidCrystal7S::clear() {
     home();
 }
 
-void LiquidCrystal7S::scrollDisplayLeft(void) {
-    register uint8_t i, j;
-    register uint8_t saveFirst;
-
+void LiquidCrystal7S::scrollDisplayLeft() {
     _curs_col = (_curs_col + _numcols - 1) % _numcols; // move cursor right
 
-    for (i = 0; i < _numrows; i++) {
-        saveFirst = _ht.read(i * _numcols);
-        for (j = _numcols - 1; j > 0; j--)
+    for (uint8_t i = 0; i < _numrows; i++) {
+        uint8_t saveFirst = _ht.read(i * _numcols);
+        for (uint8_t j = _numcols - 1; j > 0; j--)
             _ht.write(i * _numcols + j, _ht.read(i * _numcols + j + 1));
         _ht.write((i + 1) * _numcols - 1, saveFirst);
     }
 }
 
-void LiquidCrystal7S::scrollDisplayRight(void) {
-    register uint8_t i, j;
-    register uint8_t saveLast;
-
+void LiquidCrystal7S::scrollDisplayRight() {
     _curs_col = (_curs_col + 1) % _numcols; // move cursor right
 
-    for (i = 0; i < _numrows; i++) {
-        saveLast = _ht.read((i + 1) * _numcols - 1);
-        for (j = 1; j < _numcols; j++)
+    for (uint8_t i = 0; i < _numrows; i++) {
+        uint8_t saveLast = _ht.read((i + 1) * _numcols - 1);
+        for (uint8_t j = 1; j < _numcols; j++)
             _ht.write(i * _numcols + j, _ht.read(i * _numcols + j - 1));
         _ht.write(i * _numcols, saveLast);
     }
@@ -81,11 +75,11 @@ size_t LiquidCrystal7S::write(uint8_t value) {
 }
 
 size_t LiquidCrystal7S::write(const uint8_t str[]) {
-    register uint8_t i;
+    size_t i = 0;
 
-    for (i = 0; str[i]; i++)
-        write(str[i]);
-
+    while(str[i]) {
+        write(str[i++]);
+    }
     // assume success
-    return (size_t)i;
+    return i;
 }

@@ -75,7 +75,7 @@
 class LiquidCrystal7S : public Print {
 public:
 
-    LiquidCrystal7S(ILcdDisplay& pDisplay);
+    explicit LiquidCrystal7S(ILcdDisplay& pDisplay);
 
     /**
      * \brief Init display and configure memory for \c rows and \c cols.

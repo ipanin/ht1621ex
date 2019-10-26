@@ -181,7 +181,7 @@ public:
     /**
      *  \brief Init the HT1621. It inits the control bus. Moreover, it clears the (simulated) ram if \c __HT1621_READ is defined.
      */
-    void begin(void);
+    void begin();
 
     /**
      * \brief Send bits to the HT1621.
@@ -218,7 +218,7 @@ public:
 
     /** 
      * \brief Write \c bits at the given address.
-     * @param address Address to which write the bits. Max address is 32.
+     * @param address Address to which write the bits. Max address is 31.
      * @param bits Contains bits to be written. 
      * @param bit_cnt Count of bits to send starting from less significant.
      * \warning There is no check to verify if the address is valid.
@@ -227,7 +227,7 @@ public:
 
     /**
      * \brief Write \c cnt bytes starting at \c address and take data from buffer \c data.
-     * @param address Address to which start writing data. Max address is 32.
+     * @param address Address to which start writing data. Max address is 31.
      * @param array Array to be written.
      * @param cnt Length of the array.
      * \warning The array is byte aligned, so it is not very efficient. Indeed, only the 4 less significant

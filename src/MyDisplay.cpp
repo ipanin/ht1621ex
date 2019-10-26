@@ -9,7 +9,7 @@ void MyDisplay::init() {
 }
 
 void MyDisplay::clear() {
-    register uint8_t i;
+    uint8_t i;
     for (i = 0; i < HT1621_MAX_ADDR; i++)
         _ht.write(i, 0);
 }

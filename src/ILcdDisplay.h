@@ -2,8 +2,7 @@
 #define _LCD_DYSPLAY_H_INCLUDED_
 
 #include <inttypes.h>
-#include <string.h>
-#include "HT1621.h"
+//#include <string.h>
 
 class ILcdDisplay {
 public:

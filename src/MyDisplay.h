@@ -2,6 +2,7 @@
 void initLCD();
 
 #include "ILcdDisplay.h"
+#include "HT1621.h"
 
 class MyDisplay : public ILcdDisplay {
 public:
