@@ -7,16 +7,19 @@
 
 MyDisplay display(SS, RW, DATA);
 LiquidCrystal7S lcd(display, 8);
+char c = 32;
 
 void setup() {
     lcd.autoscroll();
     lcd.begin();
-    lcd.print(1234567890);
-//    lcd.print("abcdefgh");
-//    lcd.print("ijklmno.");
-//    lcd.print("rstuvxyz");
+//    lcd.print(76302817);
+//    lcd.print(-1234.56);
 }
 
 void loop() {
+    lcd.print(c);
+    delay(500);
+    if (++c >= 127)
+        c = 32;
 
 }
