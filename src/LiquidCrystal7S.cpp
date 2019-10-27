@@ -2,8 +2,6 @@
  * \file LiquidCrystal7S.cpp
  * \brief Implementation of an adaptation of LiquidCrystal library to deal with 7 segments LCD based on HT1621 chipset.
  * \author Enrico Formenti
- * \date 8 february 2015
- * \version 1.1
  * \copyright BSD license, check the License page on the blog for more information. All this text must be
  *  included in any redistribution.
  *  <br><br>

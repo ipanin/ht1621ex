@@ -59,7 +59,6 @@
 /**
  * \file HT1621.h
  * \brief A class for dealing with the Holtek HT1621 chip.
- * \version 1.0
  * \copyright BSD license, check the License page on the blog for more information. All this text must be
  *  included in any redistribution.
  *  <br><br>

@@ -6,7 +6,6 @@
  *  included in any redistribution.
  *  <br><br>
  *  See macduino.blogspot.com for more details.
- *
  */
 
 #include "HT1621.h"
